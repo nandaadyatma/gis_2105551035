@@ -31,6 +31,10 @@ body, html {
     overflow: scroll;
 }
 
+#sidebar, #map {
+    transition: width 0.5s ease, padding 0.5s ease; /* Menambahkan transisi dengan durasi 0.5 detik */
+  }
+
 .close-btn {
     position: absolute;
     top: 0px;

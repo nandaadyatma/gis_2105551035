@@ -46,13 +46,30 @@
                 <input type="text" class="form-control" id="inputDescription" required>
               </div>
               <div class="mb-3">
+                        <label for="kategoriTempat" style="margin-bottom: 6px;">Kategori Tempat</label>
+                        <select class="form-control" id="inputCategory">
+                            <option value="wisata">Wisata</option>
+                            <option value="pura">Pura</option>
+                            <option value="kuliner">Kuliner</option>
+                            <option value="belanja">Belanja</option>
+                        </select>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
                   <label for="inputLatitude" class="form-label">Latitude</label>
                   <input type="text" class="form-control" id="inputLatitude" required>
                 </div>
-                <div class="mb-6">
+              </div>
+              <div class="col">
+                <div class="mb-3">
                   <label for="inputLongitude" class="form-label">Longitude</label>
                   <input type="text" class="form-control" id="inputLongitude" required>
                 </div>
+              </div>
+            </div>
+              
+                
                 <div class="mb-3">
                   <label for="inputImgUrl" class="form-label">Image URL</label>
                   <input type="text" class="form-control" id="inputImgUrl" required>
@@ -78,6 +95,22 @@
       <tbody id="contentPlaceTable">
       </tbody>
     </table>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+      <label class="form-check-label" for="flexRadioDefault1">
+        Default radio
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+      <label class="form-check-label" for="flexRadioDefault2">
+        Default checked radio
+      </label>
+    </div>
+
+    
+
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
@@ -86,6 +119,7 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
     <script src="app.js"></script>
+    
 
 </body>
 </html>

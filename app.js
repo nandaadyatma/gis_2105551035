@@ -10,14 +10,6 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>', //copyright
 }).addTo(map);
 
-var marker = L.marker([51.5, -0.09]).addTo(map);
-
-var circle = L.circle([51.508, -0.11], {
-  color: "red",
-  fillColor: "#f03",
-  fillOpacity: 0.5,
-  radius: 500,
-}).addTo(map);
 
 //////////////////////////////////////////////////////////////////////
 
@@ -26,6 +18,7 @@ let description = document.getElementById("inputDescription");
 let latitude = document.getElementById("inputLatitude");
 let longitude = document.getElementById("inputLongitude");
 let imgUrl = document.getElementById("inputImgUrl");
+let category = document.getElementById("inputCategory");
 
 // FIREBASE
 const firebaseConfig = {
@@ -43,10 +36,15 @@ firebase.initializeApp(firebaseConfig);
 let database = firebase.database();
 
 //   Create Data to Firebase
+function testing(){
+  console.log(category.value)
+}
+
 function createData() {
   let data = {
     placeName: placeName.value,
     description: description.value,
+    category: category.value,
     latitude: latitude.value,
     longitude: longitude.value,
     imgUrl: imgUrl.value,
@@ -57,7 +55,7 @@ function createData() {
     description.value != "" &&
     latitude.value != "" &&
     longitude.value != "" &&
-    imgUrl.value != ""
+    imgUrl.value != "" 
   ) {
     database.ref("placeData").push(data);
 
@@ -92,7 +90,27 @@ function getData(snapshoot) {
     points.push([data.latitude, data.longitude]);
     console.log(element.key);
 
-    let marker = L.marker([data.latitude, data.longitude])
+    let currentIcon = cameraMarker
+    switch (data.category) {
+  
+      case "pura":
+        currentIcon = templeMarker
+        break;
+    
+      case "kuliner":
+        currentIcon = culinaryMarker
+        break;
+    
+      case "belanja":
+        currentIcon = shoppingMarker
+        break;
+    
+      default:
+        currectIcon = cameraMarker
+        break;
+    }
+
+    let marker = L.marker([data.latitude, data.longitude], {icon: currentIcon})
       .addTo(map)
       .bindPopup(
         `<b>${data.placeName}</b>`
@@ -131,6 +149,8 @@ map.on("click", onMapClick);
 // Sidebar hide unhide
 let isSideBarHidden = false;
 document.getElementById("closeSidebar").addEventListener("click", function () {
+    latitude.value = "";
+    longitude.value = "";
   if (!isSideBarHidden) {
     document.getElementById("sidebar").style.width = "0";
     document.getElementById("map").style.width = "100%";
@@ -138,6 +158,7 @@ document.getElementById("closeSidebar").addEventListener("click", function () {
     isSideBarHidden = true;
   } else {
     document.getElementById("sidebar").style.width = "30%";
+    document.getElementById("sidebar").style.padding = "10px 20px";
     document.getElementById("map").style.width = "70%";
     isSideBarHidden = false;
   }
@@ -145,3 +166,69 @@ document.getElementById("closeSidebar").addEventListener("click", function () {
 
 console.log(listLocation);
 console.log(listMarker);
+
+var ref = firebase.database().ref("placeData");
+ref.orderByChild("placeName").equalTo("Pura Tanah Lot").on("value", function(snapshot) {
+  snapshot.forEach((element) => {
+    console.log(`ini datanya: ${element.val().description}`);
+  })
+  
+});
+
+
+//Temple Marker
+var templeMarker = L.icon({
+  iconUrl: 'img/temple.png',
+  iconSize:     [30, 40], 
+  iconAnchor:   [25, 25], 
+  popupAnchor:  [-10, 0]
+});
+
+//Culinary Marker
+var culinaryMarker = L.icon({
+  iconUrl: 'img/culinary.png',
+  iconSize:     [30, 40], 
+  iconAnchor:   [25, 25], 
+  popupAnchor:  [-10, 0]
+});
+
+//Camera Marker
+var cameraMarker = L.icon({
+  iconUrl: 'img/photo.png',
+  iconSize:     [30, 40], 
+  iconAnchor:   [25, 25], 
+  popupAnchor:  [-10, 0]
+});
+
+//Shopping Marker
+var shoppingMarker = L.icon({
+  iconUrl: 'img/shop.png',
+  iconSize:     [30, 40], 
+  iconAnchor:   [25, 25], 
+  popupAnchor:  [-10, 0]
+});
+
+var currectLocationMarker = L.icon({
+  iconUrl: 'img/current_location.png',
+  iconSize:     [40, 40], 
+  iconAnchor:   [25, 25], 
+  popupAnchor:  [-5, 0]
+
+});
+
+L.marker([51.5, -0.09], {icon: currectLocationMarker}).addTo(map);
+
+navigator.geolocation.getCurrentPosition(position => {
+  const { coords: { latitude, longitude }} = position;
+  
+  var marker = new L.marker([latitude, longitude], {
+  draggable: false,
+  icon: currectLocationMarker,
+  autoPan: true
+  }).addTo(map);
+
+  map.setView([latitude, longitude], 20);
+
+  marker.bindPopup("<b>Hello, you're here!").openPopup();
+  console.log(marker);
+})
